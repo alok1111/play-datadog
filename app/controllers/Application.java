@@ -1,14 +1,27 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
+import com.play.datadog.NonStaticLogComponent;
+import com.play.datadog.StaticLogComponent;
+import play.mvc.Controller;
+import play.mvc.Result;
 
-import views.html.*;
+import javax.inject.Inject;
 
 public class Application extends Controller {
 
-    public static Result index() {
-        return ok(index.render("Your new application is ready."));
+    private StaticLogComponent staticLogComponent;
+    private NonStaticLogComponent nonStaticLogComponent;
+
+    @Inject
+    public Application(StaticLogComponent staticLogComponent, NonStaticLogComponent nonStaticLogComponent) {
+        this.staticLogComponent = staticLogComponent;
+        this.nonStaticLogComponent = nonStaticLogComponent;
+    }
+
+    public Result index() {
+        staticLogComponent.writeToLog();
+        nonStaticLogComponent.writeToLog();
+        return ok();
     }
 
 }
